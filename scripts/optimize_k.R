@@ -3,7 +3,8 @@ rm(list = ls())
 library(dplyr)
 library(FilterFlow)
 library(ggplot2)
-load(file = "~/Documents/projects/FilterFlow/data/data_disk.Rdata")
+
+load(file = "./data/data_disk.Rdata")
 
 currentset = 3
 h0 = 0.225
@@ -36,5 +37,4 @@ ggplot() +
                                       col = as.factor(rep))) +
   geom_line(data = opt_df,aes(x = time,
                               y = Qexp),col = 'red') +
-  theme_bw() +
-  scale_y_continuous(limits = c(0,2e-7))
+  theme_bw()

@@ -7,7 +7,7 @@ library(stringr)
 library(ggplot2)
 
 
-data_file <- "~/data/Data_Disk.csv"
+data_file <- "./data/Data_Disk.csv"
 
 data.csv <- read.csv(data_file,header = TRUE)
 time <- data.csv[,1]
@@ -104,5 +104,5 @@ plot4 <-
   theme_bw()
 
 
-save(Qexp_disk,file = "~/Documents/projects/FilterFlow/data/data_disk.Rdata")
+save(Qexp_disk,file = "./data/data_disk.Rdata")
 #########################################################################################################################
