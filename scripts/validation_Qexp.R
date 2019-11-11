@@ -38,7 +38,7 @@ for (iset in seq(1,3)){
 }
 
 ggplot() +
-  # geom_point(data = fit.quality, aes(x = time,y = obs,col = as.factor(set)),size = 0.5) +
+  geom_point(data = fit.quality, aes(x = time,y = obs,col = as.factor(set)),size = 0.5) +
   geom_line(data = fit.quality %>% filter(rep == 1),
             aes(x = time, y = sim, col = as.factor(set)),size = 2) +
   theme_bw()

@@ -8,7 +8,7 @@ library(ggplot2)
 library(fractal)
 
 
-data_file <- "./data/Data_Disk.csv"
+data_file <- "./data/Data_Disk_2.csv"
 
 data.csv <- read.csv(data_file,header = TRUE)
 time <- data.csv[,1]
@@ -21,13 +21,13 @@ for (i in seq(1,ncol(Weight.obs))){
 }
 
 data.formatted <- melt(Weight.obs) %>% rename(weight.obs = value) %>% mutate(type = "Disk",
-                                                                             set = as.numeric(substring(variable,7,7)),
-                                                                             rep = as.numeric(substring(variable,8,8)),
+                                                                             set = as.numeric(substring(variable,2,2)),
+                                                                             rep = as.numeric(substring(variable,3,3)),
                                                                              time = rep(time,length(2:ncol(data.csv)))) %>% mutate(time = time*60,
                                                                                                                                    weight.obs = weight.obs/1000/1000)
 
 # Remove weird curve
-data.formatted  <- data.formatted  %>% filter(!(set == 3 & rep == 2 ))
+data.formatted  <- data.formatted  %>% filter(!(set == 1 & rep == 2 ))
 
 
 alpha <- 0.05
@@ -112,7 +112,7 @@ library(stringr)
 library(ggplot2)
 
 
-data_file <- "./data/Data_Filter.csv"
+data_file <- "./data/Data_Filter_2.csv"
 
 data.csv <- read.csv(data_file,header = TRUE)
 time <- data.csv[,1]
@@ -124,8 +124,8 @@ for (i in seq(1,ncol(Weight.obs))){
 }
 
 data.formatted <- melt(Weight.obs) %>% rename(weight.obs = value) %>% mutate(type = "Filter",
-                                                                             set = as.numeric(substring(variable,7,7)),
-                                                                             rep = as.numeric(substring(variable,8,8)),
+                                                                             set = as.numeric(substring(variable,2,2)),
+                                                                             rep = as.numeric(substring(variable,3,3)),
                                                                              time = rep(time,length(2:(ncol(data.csv)-1)))) %>% mutate(time = time*60,
                                                                                                                                        weight.obs = weight.obs/1000/1000)
 
