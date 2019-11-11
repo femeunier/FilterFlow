@@ -114,3 +114,128 @@ ggplot() +
 save(k_opt,file = "./data/kopt.Rdata")
 
 
+#################################################################################################
+# Opt. All together
+
+rm(list = ls())
+
+library(dplyr)
+library(FilterFlow)
+library(ggplot2)
+library(stats4)
+
+load(file = "./data/data_disk.Rdata")
+
+opt_df_all <- data.frame()
+
+h0 = 0.225
+rb = 0.05
+tb = 0.01
+
+
+f <- function(k){
+  RMSE_Qfit_d_all(k, tb = tb,rb = rb,h0 = h0, data = Qexp_disk)
+}
+
+model_opt <- optim(par = c(1e-8,1e-8,1e-8),
+                   fn = f,
+                   method =  "Nelder-Mead")
+
+RMSE <- model_opt$value
+k_opt <- model_opt$par
+
+for (iset in seq(1,3)){
+  currentset = iset
+
+  current_data <- Qexp_disk %>% filter(set == currentset) %>% dplyr::select(c(V,Qexp,rep,time))
+
+
+
+
+  opt_df <- data.frame(time = current_data %>% filter(rep == 1) %>%pull(time),
+                       Qfit = Qfit_d(k = k_opt[iset],
+                                     time = current_data %>% filter(rep == 1) %>%pull(time),
+                                     rb = rb, tb = tb, h0 = h0),
+                       set = currentset)
+
+  opt_df_all <- rbind(opt_df_all,
+                      opt_df)
+}
+
+
+ggplot() +
+  geom_point(data = Qexp_disk, aes(x = time,
+                                   y = Qexp,
+                                   col = as.factor(set)),size = 0.5) +
+  geom_line(data = opt_df_all,aes(x = time,
+                                  y = Qfit,
+                                  col = as.factor(set)),size = 2) +
+  theme_bw()
+
+save(k_opt,file = "./data/kopt.Rdata")
+
+
+
+#######################################################################################################
+# Opt. All together + rb
+
+rm(list = ls())
+
+library(dplyr)
+library(FilterFlow)
+library(ggplot2)
+library(stats4)
+
+load(file = "./data/data_disk.Rdata")
+
+opt_df_all <- data.frame()
+
+h0 = 0.225
+rb_start = 0.05
+tb = 0.01
+
+
+f <- function(param){
+  RMSE_Qfit_d_allparams(param, data = Qexp_disk)
+}
+
+model_opt <- optim(par = c(1e-8,1e-8,1e-8,rb_start),
+                   fn = f,
+                   method =  "Nelder-Mead")
+
+RMSE <- model_opt$value
+k_opt <- model_opt$par[1:3]
+rb <- model_opt$par[4]
+# h0 <- model_opt$par[5]
+# tb <- model_opt$par[6]
+
+for (iset in seq(1,3)){
+  currentset = iset
+
+  current_data <- Qexp_disk %>% filter(set == currentset) %>% dplyr::select(c(V,Qexp,rep,time))
+
+
+
+
+  opt_df <- data.frame(time = current_data %>% filter(rep == 1) %>%pull(time),
+                       Qfit = Qfit_d(k = k_opt[iset],
+                                     time = current_data %>% filter(rep == 1) %>%pull(time),
+                                     rb = rb, tb = tb, h0 = h0),
+                       set = currentset)
+
+  opt_df_all <- rbind(opt_df_all,
+                      opt_df)
+}
+
+
+ggplot() +
+  geom_point(data = Qexp_disk, aes(x = time,
+                                   y = Qexp,
+                                   col = as.factor(set)),size = 0.5) +
+  geom_line(data = opt_df_all,aes(x = time,
+                                  y = Qfit,
+                                  col = as.factor(set)),size = 2) +
+  theme_bw()
+
+save(k_opt,file = "./data/kopt.Rdata")
+

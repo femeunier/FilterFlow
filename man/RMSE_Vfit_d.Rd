@@ -21,5 +21,5 @@ RMSE_Vfit_d(k, tb = 0.01, rb = 0.05, h0 = 0.225, data)
 Returns RMSE
 }
 \author{
-RMSE_Qfit_d Heylen
+Camille Heylen
 }

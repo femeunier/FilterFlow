@@ -69,7 +69,7 @@ Vfit_d <- function(k,time,h0 = 0.225,rb = 0.05,tb = 0.01){
 
 #' @name RMSE_Vfit_d
 #' @title RMSE_Vfit_d
-#' @author RMSE_Qfit_d Heylen
+#' @author Camille Heylen
 #' @export
 #' @description Returns RMSE
 #' @param k k
@@ -86,4 +86,83 @@ RMSE_Vfit_d<- function(k, tb = 0.01,rb = 0.05,h0 = 0.225, data){
   RMSE <- sqrt(sum((Vfit_all - data%>%pull(V))^2,na.rm=TRUE)/(length(Vfit_all)-1))
 
   return(RMSE)
+}
+
+
+
+#' @name RMSE_Qfit_d_all
+#' @title RMSE_Qfit_d_all
+#' @author Camille Heylen
+#' @export
+#' @description Returns sum of RMSE
+#' @param k k
+#' @param tb tb
+#' @param rb rb
+#' @param h0 h0
+#' @param data All data
+#'
+RMSE_Qfit_d_all<- function(k, tb = 0.01,rb = 0.05,h0 = 0.225, data){
+
+  RMSE <- c()
+  # k=c(k1,k2,k3)
+  # print(k)
+
+  if (any(k<0))return(1)
+
+  for (iset in seq(1,3)){
+    currentset = iset
+
+    current_data <- data %>% filter(set == currentset) %>% dplyr::select(c(V,Qexp,rep,time))
+
+    time <- current_data %>% filter(rep == 1) %>% pull(time)
+
+    Qfit <- Qfit_d(k = k[iset],time = time,h0 = h0,rb = rb,tb = tb)
+    Qfit_all <- rep(Qfit,length(unique(current_data %>% pull(rep))))
+    RMSE <- c(RMSE,sqrt(sum((Qfit_all - current_data%>%pull(Qexp))^2,na.rm=TRUE)/(length(Qfit_all)-1)))
+
+  }
+
+
+  return(sum(RMSE))
+}
+
+
+
+#' @name RMSE_Qfit_d_all
+#' @title RMSE_Qfit_d_all
+#' @author Camille Heylen
+#' @export
+#' @description Returns sum of RMSE
+#' @param k k
+#' @param tb tb
+#' @param rb rb
+#' @param h0 h0
+#' @param data All data
+#'
+RMSE_Qfit_d_allparams<- function(param, h0=0.225,tb = 0.01, data){
+
+  RMSE <- c()
+
+  if (any(param<0)) return(1)
+  if (param[4]<0.048 | param[4]>0.052) return(1)
+
+  k <- param[1:3]
+  # h0 <- param[4]
+  rb <- param[4]
+  # tb <- param[6]
+
+  for (iset in seq(1,3)){
+    currentset = iset
+
+    current_data <- data %>% filter(set == currentset) %>% dplyr::select(c(V,Qexp,rep,time))
+
+    time <- current_data %>% filter(rep == 1) %>% pull(time)
+
+    Qfit <- Qfit_d(k = k[iset],time = time,h0 = h0,rb = rb,tb = tb)
+    Qfit_all <- rep(Qfit,length(unique(current_data %>% pull(rep))))
+    RMSE <- c(RMSE,sqrt(sum((Qfit_all - current_data%>%pull(Qexp))^2,na.rm=TRUE)/(length(Qfit_all)-1)))
+
+  }
+
+  return(sum(RMSE))
 }
