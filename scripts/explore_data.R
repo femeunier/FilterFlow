@@ -7,7 +7,7 @@ library(stringr)
 library(ggplot2)
 
 
-data_file <- "/home/femeunier/Documents/projects/FilterFlow/data/Data_Disk.csv"
+data_file <- "./data/Data_Disk.csv"
 
 data.csv <- read.csv(data_file,header = TRUE)
 time <- data.csv[,1]
@@ -38,6 +38,8 @@ plot1 <-
        aes(x = time, y = weight.obs,colour = as.factor(set),group=interaction(set, rep))) +
   geom_point() +
   theme_bw()
+
+plot1
 
 plot2 <-
   ggplot(data = data.formatted2,
@@ -102,5 +104,5 @@ plot4 <-
   theme_bw()
 
 
-save(Qexp_disk,file = "~/Documents/projects/FilterFlow/data/data_disk.Rdata")
+save(Qexp_disk,file = "./data/data_disk.Rdata")
 #########################################################################################################################
