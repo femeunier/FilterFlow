@@ -20,13 +20,7 @@ RMSE_Qfit_d_allparams(param, data)
 
 \item{data}{All data}
 
-\item{k}{k}
-
-\item{tb}{tb}
-
-\item{rb}{rb}
-
-\item{h0}{h0}
+\item{param}{k h0 rb tb}
 
 \item{data}{All data}
 }
